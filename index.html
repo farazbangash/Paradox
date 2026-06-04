@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PARADOX — Websites That Print Clients</title>
+<meta name="description" content="Done-for-you websites engineered for conversion, not decoration. A client acquisition system built in 5–7 days." />
+<link rel="icon" type="image/png" href="brand%20assets/paradox_brand_assets.png" />
+
+<!-- Fonts: Syne (display) + Hanken Grotesk (body grotesk) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: '#000000',
+          accent: '#C9A875',
+        },
+        fontFamily: {
+          display: ['Syne', 'sans-serif'],
+          sans: ['Archivo', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  :root {
+    --bg: #000000;
+    --bg-1: #08080a;     /* elevated */
+    --bg-2: #0e0e11;     /* floating */
+    --ink: #f6f5f3;      /* primary text */
+    --ink-2: rgba(246,245,243,0.60);
+    --ink-3: rgba(246,245,243,0.38);
+    --ink-4: rgba(246,245,243,0.22);
+    --line: rgba(246,245,243,0.09);
+    --line-2: rgba(246,245,243,0.16);
+    --accent: #c9a875;
+    --accent-bright: #e6cfa3;
+    --accent-deep: #a8854f;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-2: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--accent); color: #000; }
+
+  /* Custom scrollbar — thin, accent thumb */
+  html { scrollbar-width: thin; scrollbar-color: rgba(201,168,117,0.38) transparent; }
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(201,168,117,0.30); border-radius: 20px;
+    border: 3px solid #000; background-clip: padding-box;
+    transition: background 0.3s;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(201,168,117,0.55); background-clip: padding-box; }
+
+  /* Accessible focus ring — keyboard only, on-brand */
+  a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #000, 0 0 0 4px rgba(201,168,117,0.65);
+    border-radius: 3px;
+  }
+
+  /* Architectural blueprint grid — faint, masked so it fades at the edges */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(246,245,243,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(246,245,243,0.035) 1px, transparent 1px);
+    background-size: 70px 70px;
+    -webkit-mask-image: radial-gradient(135% 105% at 50% -8%, #000 32%, transparent 80%);
+            mask-image: radial-gradient(135% 105% at 50% -8%, #000 32%, transparent 80%);
+  }
+
+  /* Breathing warm glows — slow drift + pulse, transform/opacity only */
+  .atmosphere {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  }
+  .glow { position: absolute; border-radius: 50%; will-change: transform, opacity; }
+  .glow-1 {
+    width: 62vw; height: 62vw; left: -12vw; top: -22vw;
+    background: radial-gradient(circle, rgba(201,168,117,0.16), transparent 60%);
+    animation: float1 22s ease-in-out infinite;
+  }
+  .glow-2 {
+    width: 46vw; height: 46vw; right: -10vw; top: 6vw;
+    background: radial-gradient(circle, rgba(201,168,117,0.10), transparent 62%);
+    animation: float2 27s ease-in-out infinite;
+  }
+  .glow-3 {
+    width: 56vw; height: 56vw; left: 28vw; bottom: -26vw;
+    background: radial-gradient(circle, rgba(201,168,117,0.11), transparent 62%);
+    animation: float3 25s ease-in-out infinite;
+  }
+  @keyframes float1 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+    50% { transform: translate(5%, 4%) scale(1.12); opacity: 1; }
+  }
+  @keyframes float2 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.55; }
+    50% { transform: translate(-6%, 5%) scale(1.1); opacity: 0.95; }
+  }
+  @keyframes float3 {
+    0%, 100% { transform: translate(0, 0) scale(1.05); opacity: 0.65; }
+    50% { transform: translate(4%, -5%) scale(1); opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .glow { animation: none !important; }
+  }
+
+  .grain {
+    position: fixed; inset: -50%; z-index: 1; pointer-events: none; opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* Vignette — frames the page, darkens the far edges */
+  .vignette {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(128% 112% at 50% 30%, transparent 50%, rgba(0,0,0,0.72) 100%);
+  }
+
+  /* Animated stat number — counts up with a settle-blur (adapted from
+     iOS numericText / motion AnimateNumber, in vanilla to fit this site) */
+  .stat-num { display: inline-block; font-variant-numeric: tabular-nums; will-change: filter, transform; }
+
+  /* Wordmark scroll band — the wordmark drifts across as the band passes
+     through the viewport (scroll-driven, reverses naturally on scroll up). */
+  .wordmark-band { position: relative; overflow: hidden; }
+  .wordmark-slide {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    height: clamp(70px, 12vw, 168px); width: auto; max-width: none;
+    opacity: 0.08; pointer-events: none; user-select: none;
+    will-change: transform; filter: blur(0.3px);
+  }
+
+  .wrap { width: 100%; max-width: 1320px; margin-inline: auto; padding-inline: clamp(22px, 5vw, 88px); }
+  .content { position: relative; z-index: 2; }
+
+  /* Type */
+  .display { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: -0.03em; line-height: 0.96; }
+  .kicker {
+    font-family: 'Hanken Grotesk', sans-serif; font-weight: 500;
+    font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .lede { color: var(--ink-2); font-weight: 300; line-height: 1.7; }
+  .accent-text { color: var(--accent); }
+  .stroke-text {
+    color: transparent; -webkit-text-stroke: 2px rgba(246,245,243,0.52);
+  }
+
+  /* Process step — animated accent border on hover */
+  .process-step { position: relative; padding: 32px 32px 36px 32px; }
+  /* Bottom border — draws left → right, fires first */
+  .process-step::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 1px; width: 100%;
+    background: var(--accent);
+    border-radius: 0 0 0 3px;
+    transform: scaleX(0);
+    transform-origin: left;
+    opacity: 0;
+    transition: transform 0.75s var(--ease), opacity 0.3s;
+    box-shadow: 0 2px 10px 0 rgba(201,168,117,0.22);
+  }
+  /* Left border — draws bottom → top, fires after bottom finishes */
+  .process-step::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 1px; height: 100%;
+    background: var(--accent);
+    border-radius: 3px 0 0 3px;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    opacity: 0;
+    transition: transform 0.75s var(--ease) 0.75s, opacity 0.3s 0.75s;
+    box-shadow: 2px 0 10px 0 rgba(201,168,117,0.22);
+  }
+  .process-step:hover::before { transform: scaleX(1); opacity: 1; }
+  .process-step:hover::after  { transform: scaleY(1); opacity: 1; }
+
+  /* Hairline dividers */
+  .hr { height: 1px; background: var(--line); border: 0; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: 'Hanken Grotesk', sans-serif; font-weight: 500; font-size: 14px;
+    letter-spacing: 0.02em; padding: 17px 30px; border-radius: 2px;
+    cursor: pointer; position: relative; will-change: transform;
+    transition: transform 0.5s var(--ease), background-color 0.4s var(--ease), color 0.4s var(--ease), box-shadow 0.5s var(--ease), border-color 0.4s var(--ease);
+  }
+  .btn .arrow { transition: transform 0.5s var(--ease); }
+  .btn:hover .arrow { transform: translateX(5px); }
+
+  .btn-primary {
+    background: var(--accent); color: #120d04;
+    box-shadow: 0 10px 30px -12px rgba(201,168,117,0.55), 0 2px 0 rgba(255,255,255,0.18) inset;
+  }
+  .btn-primary:hover {
+    background: var(--accent-bright); transform: translateY(-2px);
+    box-shadow: 0 18px 44px -14px rgba(201,168,117,0.7), 0 2px 0 rgba(255,255,255,0.22) inset;
+  }
+  .btn-ghost {
+    background: rgba(246,245,243,0.015); color: var(--ink);
+    border: 1px solid var(--line-2);
+  }
+  .btn-ghost:hover { transform: translateY(-2px); border-color: rgba(246,245,243,0.34); background: rgba(246,245,243,0.04); }
+
+  .btn-sm { padding: 12px 22px; font-size: 13px; }
+
+  /* Cards */
+  .card {
+    background:
+      linear-gradient(180deg, rgba(246,245,243,0.035), rgba(246,245,243,0.008));
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 30px 60px -40px rgba(0,0,0,0.9);
+    transition: transform 0.6s var(--ease), border-color 0.5s var(--ease), box-shadow 0.6s var(--ease);
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--line-2); box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 50px 90px -50px rgba(0,0,0,1); }
+
+  .card-featured {
+    border-color: rgba(201,168,117,0.32);
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(201,168,117,0.12), transparent 60%),
+      linear-gradient(180deg, rgba(246,245,243,0.04), rgba(246,245,243,0.01));
+    box-shadow: 0 1px 0 rgba(201,168,117,0.18) inset, 0 40px 80px -45px rgba(0,0,0,1), 0 0 60px -30px rgba(201,168,117,0.35);
+  }
+  .card-featured:hover { border-color: rgba(201,168,117,0.5); }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity 1s var(--ease-2), transform 1s var(--ease-2); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* Hero entrance */
+  @keyframes rise { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+  .rise { opacity: 0; animation: rise 1s var(--ease-2) forwards; }
+
+  /* Marquee */
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-track { display: inline-flex; white-space: nowrap; animation: marquee 32s linear infinite; }
+
+  /* Nav */
+  .nav { transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease), backdrop-filter 0.5s var(--ease); }
+  .nav.scrolled { background: rgba(0,0,0,0.6); backdrop-filter: blur(14px); border-bottom-color: var(--line); }
+  .nav-link { position: relative; color: var(--ink-2); font-size: 14px; transition: color 0.4s var(--ease); }
+  .nav-link::after {
+    content: ''; position: absolute; left: 0; bottom: -6px; height: 1px; width: 100%;
+    background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease);
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link:hover::after { transform: scaleX(1); }
+
+  /* Inputs */
+  .field {
+    width: 100%; background: rgba(0,0,0,0.45); border: 1px solid var(--line);
+    color: var(--ink); border-radius: 3px; padding: 15px 16px; font-size: 15px; font-family: 'Hanken Grotesk', sans-serif;
+    transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease), background-color 0.4s var(--ease);
+  }
+  .field::placeholder { color: var(--ink-3); }
+  .field:focus {
+    outline: none; border-color: rgba(201,168,117,0.5); background: rgba(0,0,0,0.6);
+    box-shadow: 0 0 0 3px rgba(201,168,117,0.12);
+  }
+  select.field { appearance: none; -webkit-appearance: none; background-image: none; cursor: pointer; }
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: ''; position: absolute; right: 18px; top: 50%; width: 8px; height: 8px;
+    border-right: 1.5px solid var(--ink-3); border-bottom: 1.5px solid var(--ink-3);
+    transform: translateY(-65%) rotate(45deg); pointer-events: none;
+  }
+
+  /* Showcase tiles */
+  .tile {
+    position: relative; overflow: hidden; border-radius: 4px; border: 1px solid var(--line); background: var(--bg-1);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 30px 60px -45px rgba(0,0,0,0.9);
+    transition: border-color 0.6s var(--ease), box-shadow 0.6s var(--ease), transform 0.6s var(--ease);
+  }
+  .tile:hover {
+    transform: translateY(-3px);
+    border-color: rgba(201,168,117,0.34);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 44px 84px -46px rgba(0,0,0,1), 0 0 54px -28px rgba(201,168,117,0.4);
+  }
+  .tile img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s var(--ease), opacity 0.6s var(--ease); opacity: 0.86; }
+  .tile:hover img { transform: scale(1.05); opacity: 1; }
+  /* warm color treatment that washes in on hover */
+  .tile::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    background: linear-gradient(160deg, rgba(201,168,117,0.18), transparent 55%);
+    mix-blend-mode: overlay; opacity: 0; transition: opacity 0.6s var(--ease);
+  }
+  .tile:hover::after { opacity: 1; }
+  .tile-overlay {
+    position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 22px; z-index: 2;
+    background: linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0.05) 55%, transparent);
+    opacity: 0; transition: opacity 0.6s var(--ease);
+  }
+  .tile:hover .tile-overlay { opacity: 1; }
+  .tile-tag { transform: translateY(8px); transition: transform 0.6s var(--ease); }
+  .tile:hover .tile-tag { transform: none; }
+  /* glassy corner cue */
+  .tile-arrow {
+    position: absolute; top: 16px; right: 16px; z-index: 3;
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 17px;
+    color: var(--ink); background: rgba(0,0,0,0.35); backdrop-filter: blur(6px);
+    border: 1px solid rgba(246,245,243,0.18);
+    opacity: 0; transform: translateY(-6px) scale(0.85);
+    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), background 0.4s var(--ease), border-color 0.4s var(--ease);
+  }
+  .tile:hover .tile-arrow { opacity: 1; transform: none; border-color: rgba(201,168,117,0.5); background: rgba(201,168,117,0.14); }
+
+  /* Numbered pillar */
+  .pillar { border-top: 1px solid var(--line); transition: border-color 0.5s var(--ease); position: relative; }
+  .pillar:hover { border-color: var(--line-2); }
+  .pillar::before {
+    content: ''; position: absolute; top: -1px; left: 0; height: 1px; width: 100%;
+    background: var(--accent); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.65s var(--ease);
+  }
+  .pillar:hover::before { transform: scaleX(1); }
+  .pillar .num { transition: color 0.45s var(--ease); }
+  .pillar:hover .num { color: var(--accent); }
+  .pillar-mark { display: inline-block; transition: transform 0.7s var(--ease); }
+  .pillar:hover .pillar-mark { transform: rotate(90deg); }
+
+  /* Audience grid cell — accent-reveal signature */
+  .aud-cell { position: relative; }
+  .aud-cell::before {
+    content: ''; position: absolute; top: 0; left: 0; height: 2px; width: 100%;
+    background: var(--accent); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.6s var(--ease);
+  }
+  .aud-cell:hover::before { transform: scaleX(1); }
+  .aud-cell .num { transition: color 0.45s var(--ease); }
+  .aud-cell:hover .num { color: var(--accent); }
+
+  /* Marquee edge fade */
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 11%, #000 89%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 11%, #000 89%, transparent);
+  }
+
+  .num { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--ink-4); letter-spacing: -0.02em; }
+
+
+  .tick { color: var(--accent); flex: none; }
+
+  /* ---- Custom cursor: brand spark (✦) ----------------------------------
+     Only on devices with a real pointer; hidden on touch. The native cursor
+     is suppressed while .has-cursor is on the root. Position, rotation and
+     scale are all driven by a single eased rAF loop for smooth motion. */
+  @media (hover: hover) and (pointer: fine) {
+    html.has-cursor, html.has-cursor * { cursor: none !important; }
+  }
+  .cursor-spark {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    pointer-events: none; user-select: none;
+    width: 22px; height: 22px;
+    color: var(--accent);
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0);
+    will-change: transform, opacity;
+    filter: drop-shadow(0 0 6px rgba(201,168,117,0.5));
+    transition: opacity 0.4s var(--ease), color 0.3s var(--ease), filter 0.3s var(--ease);
+  }
+  .cursor-spark svg { display: block; width: 100%; height: 100%; }
+  .cursor-spark.is-on { opacity: 1; }
+  /* over gold surfaces (primary buttons): invert to dark for contrast */
+  .cursor-spark.is-invert { color: #120d04; filter: none; }
+
+  @media (max-width: 768px) {
+    .display { line-height: 1.0; }
+  }
+</style>
+</head>
+
+<body>
+<div class="bg-grid"></div>
+<div class="atmosphere">
+  <span class="glow glow-1"></span>
+  <span class="glow glow-2"></span>
+  <span class="glow glow-3"></span>
+</div>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav fixed top-0 left-0 w-full z-50 border-b border-transparent">
+  <div class="wrap flex items-center justify-between" style="height: 76px;">
+    <a href="#top" class="flex items-center gap-3" aria-label="Paradox home">
+      <img src="brand%20assets/paradox_icon_t.png" alt="" style="height: 34px; width:auto;" />
+      <img src="brand%20assets/paradox_wordmark_t.png" alt="Paradox" class="hidden sm:inline" style="height: 20px; width:auto;" />
+    </a>
+    <div class="hidden md:flex items-center gap-9">
+      <a href="#offer" class="nav-link">Offer</a>
+      <a href="#system" class="nav-link">Systems</a>
+      <a href="#process" class="nav-link">Process</a>
+      <a href="#work" class="nav-link">Work</a>
+    </div>
+    <a href="#start" class="btn btn-primary btn-sm">Get Started <span class="arrow">→</span></a>
+  </div>
+</nav>
+
+<main id="top" class="content">
+
+  <!-- ============ HERO ============ -->
+  <section class="relative min-h-screen flex flex-col justify-center pt-28 pb-16">
+    <!-- oversized watermark icon -->
+    <img id="hero-bg-icon" src="brand%20assets/paradox_icon_t.png" alt=""
+         class="pointer-events-none select-none hidden lg:block"
+         style="position:absolute; right:-60px; top:50%; transform:translateY(-50%) rotate(0deg); height:min(78vh,720px); width:auto; opacity:0.08; filter: blur(0.3px); will-change:transform;" />
+    <div class="wrap">
+      <div class="rise" style="animation-delay: 0.05s;">
+        <div class="flex items-center gap-4 mb-9">
+          <span class="kicker">Digital Systems Studio</span>
+          <span class="hr flex-1 max-w-[120px] hidden sm:block"></span>
+          <span class="kicker hidden sm:inline">Est. Conversion</span>
+        </div>
+      </div>
+
+      <h1 class="display rise" style="font-size: clamp(44px, 8.4vw, 132px); animation-delay: 0.12s;">
+        WE BUILD WEBSITES<br />
+        THAT <span class="accent-text">PRINT</span> <span class="stroke-text">CLIENTS</span>
+      </h1>
+
+      <p class="lede rise max-w-[560px] mt-9" style="font-size: clamp(16px,1.4vw,20px); animation-delay: 0.22s;">
+        Done-for-you websites engineered for conversion, not decoration —
+        a client acquisition system disguised as a beautiful site.
+      </p>
+
+      <div class="rise flex flex-wrap items-center gap-4 mt-11" style="animation-delay: 0.32s;">
+        <a href="#start" class="btn btn-primary">Get Started <span class="arrow">→</span></a>
+        <a href="#system" class="btn btn-ghost">View Systems</a>
+      </div>
+
+      <!-- meta strip -->
+      <div class="rise mt-20" style="animation-delay: 0.46s;">
+        <div class="hr mb-6"></div>
+        <div class="flex flex-wrap gap-x-14 gap-y-5">
+          <div>
+            <div class="display text-[26px]" style="font-weight:700;"><span class="stat-num" data-range="5,7">5–7</span><span class="text-[15px] align-top accent-text ml-1">days</span></div>
+            <div class="kicker mt-2">Build Time</div>
+          </div>
+          <div>
+            <div class="display text-[26px]" style="font-weight:700;"><span class="stat-num" data-to="250" data-prefix="$">$250</span><span class="text-[15px] align-top accent-text ml-1">flat</span></div>
+            <div class="kicker mt-2">Starting Price</div>
+          </div>
+          <div>
+            <div class="display text-[26px]" style="font-weight:700;"><span class="stat-num" data-to="100">100</span><span class="text-[15px] align-top accent-text ml-1">%</span></div>
+            <div class="kicker mt-2">Conversion-First</div>
+          </div>
+          <div class="hidden sm:block">
+            <div class="display text-[26px]" style="font-weight:700;"><span class="stat-num" data-inf="999">∞</span></div>
+            <div class="kicker mt-2">Unlimited Edits</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AUDIENCE MARQUEE ============ -->
+  <section class="py-10 border-y border-[var(--line)] overflow-hidden marquee-mask">
+    <div class="marquee-track kicker" style="font-size: clamp(28px,4vw,52px); letter-spacing:-0.01em; color: var(--ink-4);">
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Clinics</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Aesthetic Brands</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Personal Brands</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">High-Ticket Services</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Clinics</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Aesthetic Brands</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Personal Brands</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">High-Ticket Services</span><span class="accent-text mx-3">✦</span>
+    </div>
+  </section>
+
+  <!-- ============ AUDIENCE GRID ============ -->
+  <section class="py-24 md:py-32">
+    <div class="wrap">
+      <div class="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <h2 class="display" style="font-size: clamp(30px,4.4vw,58px);">Built for brands<br />that sell.</h2>
+        <p class="lede max-w-[360px] md:text-right">We work with operators who treat their website as revenue infrastructure — not a brochure.</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--line)] border border-[var(--line)] rounded">
+        <div class="reveal aud-cell bg-ink p-8 lg:p-10 group transition-colors duration-500 hover:bg-[var(--bg-1)]">
+          <div class="num text-[15px] mb-12">01</div>
+          <div class="display text-[22px] mb-3" style="font-weight:700;">Clinics</div>
+          <p class="lede text-[14px]">Medical, dental & wellness practices booking high-intent patients.</p>
+        </div>
+        <div class="reveal aud-cell bg-ink p-8 lg:p-10 transition-colors duration-500 hover:bg-[var(--bg-1)]" style="transition-delay:0.06s;">
+          <div class="num text-[15px] mb-12">02</div>
+          <div class="display text-[22px] mb-3" style="font-weight:700;">Aesthetic Brands</div>
+          <p class="lede text-[14px]">Beauty, skincare & studios that live and die by first impressions.</p>
+        </div>
+        <div class="reveal aud-cell bg-ink p-8 lg:p-10 transition-colors duration-500 hover:bg-[var(--bg-1)]" style="transition-delay:0.12s;">
+          <div class="num text-[15px] mb-12">03</div>
+          <div class="display text-[22px] mb-3" style="font-weight:700;">Personal Brands</div>
+          <p class="lede text-[14px]">Founders & creators converting audience into qualified clients.</p>
+        </div>
+        <div class="reveal aud-cell bg-ink p-8 lg:p-10 transition-colors duration-500 hover:bg-[var(--bg-1)]" style="transition-delay:0.18s;">
+          <div class="num text-[15px] mb-12">04</div>
+          <div class="display text-[22px] mb-3" style="font-weight:700;">High-Ticket Services</div>
+          <p class="lede text-[14px]">Agencies & consultants closing premium, considered offers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OFFER / PRICING ============ -->
+  <section id="offer" class="py-24 md:py-32">
+    <div class="wrap">
+      <div class="reveal flex items-center gap-4 mb-14">
+        <span class="kicker">The Offer</span>
+        <span class="hr flex-1"></span>
+        <span class="kicker">No retainers required to start</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Website -->
+        <div class="reveal card p-9 md:p-12 flex flex-col">
+          <div class="flex items-start justify-between mb-10">
+            <div>
+              <div class="kicker mb-4">The Website</div>
+              <div class="flex items-end gap-2">
+                <span class="display text-[64px] md:text-[78px]" style="font-weight:800;">$250</span>
+                <span class="lede mb-4">one-time</span>
+              </div>
+            </div>
+            <span class="num text-[15px]">01</span>
+          </div>
+          <ul class="flex flex-col gap-4 mb-10">
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Built in 5–7 days</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Conversion-focused architecture</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Fully mobile optimized</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Custom design — never templated</span></li>
+          </ul>
+          <div class="mt-auto"><a href="#start" class="btn btn-ghost w-full justify-center">Start with the site <span class="arrow">→</span></a></div>
+        </div>
+
+        <!-- Retainer (featured) -->
+        <div class="reveal card card-featured p-9 md:p-12 flex flex-col relative">
+          <span class="absolute top-6 right-6 kicker accent-text" style="color:var(--accent);">Most chosen</span>
+          <div class="flex items-start justify-between mb-10">
+            <div>
+              <div class="kicker mb-4">The Retainer</div>
+              <div class="flex items-end gap-2">
+                <span class="display text-[64px] md:text-[78px] accent-text" style="font-weight:800;">$99</span>
+                <span class="lede mb-4">/ month</span>
+              </div>
+            </div>
+            <span class="num text-[15px]">02</span>
+          </div>
+          <ul class="flex flex-col gap-4 mb-10">
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Unlimited edits & requests</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Ongoing maintenance & uptime</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Continuous conversion improvements</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Priority support & reporting</span></li>
+          </ul>
+          <div class="mt-auto"><a href="#start" class="btn btn-primary w-full justify-center">Get the full system <span class="arrow">→</span></a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORDMARK SCROLL BAND ============ -->
+  <section class="wordmark-band py-24 md:py-32" aria-hidden="true">
+    <img class="wordmark-slide" src="brand%20assets/paradox_wordmark_t.png" alt="" />
+  </section>
+
+  <!-- ============ SYSTEM ============ -->
+  <section id="system" class="py-28 md:py-40">
+    <div class="wrap">
+      <div class="reveal max-w-[1000px]">
+        <span class="kicker">The Difference</span>
+        <h2 class="display mt-8" style="font-size: clamp(34px,6vw,92px);">
+          This is not a website.<br />
+          It's a <span class="accent-text">client acquisition</span> system.
+        </h2>
+        <p class="lede mt-9 max-w-[620px]" style="font-size:18px;">
+          Most sites decorate. Ours are engineered — every section, every line, every pixel
+          exists to move a stranger one step closer to becoming a paying client.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-0 mt-20">
+        <div class="reveal pillar pt-8 pr-8">
+          <div class="flex items-center justify-between mb-10">
+            <span class="num text-[14px]">01</span>
+            <span class="accent-text text-[20px] pillar-mark">✦</span>
+          </div>
+          <h3 class="display text-[26px] mb-4" style="font-weight:700;">Conversion-First Design</h3>
+          <p class="lede text-[15px]">Layout, hierarchy and copy structured around a single outcome: the next action.</p>
+        </div>
+        <div class="reveal pillar pt-8 px-0 md:px-8" style="transition-delay:0.08s;">
+          <div class="flex items-center justify-between mb-10">
+            <span class="num text-[14px]">02</span>
+            <span class="accent-text text-[20px] pillar-mark">✦</span>
+          </div>
+          <h3 class="display text-[26px] mb-4" style="font-weight:700;">Fast Deployment</h3>
+          <p class="lede text-[15px]">From brand to live in 5–7 days. Momentum is part of the strategy, not an afterthought.</p>
+        </div>
+        <div class="reveal pillar pt-8 md:pl-8" style="transition-delay:0.16s;">
+          <div class="flex items-center justify-between mb-10">
+            <span class="num text-[14px]">03</span>
+            <span class="accent-text text-[20px] pillar-mark">✦</span>
+          </div>
+          <h3 class="display text-[26px] mb-4" style="font-weight:700;">Ongoing Optimization</h3>
+          <p class="lede text-[15px]">We watch the data and keep tightening — your site compounds instead of decaying.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section id="process" class="py-24 md:py-32 border-t border-[var(--line)]">
+    <div class="wrap">
+      <div class="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20">
+        <h2 class="display" style="font-size: clamp(30px,4.4vw,58px);">Three steps.<br />Zero friction.</h2>
+        <p class="lede max-w-[360px] md:text-right">A process built so you can stay in your business while we build the machine.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+        <div class="reveal process-step">
+          <div class="display stroke-text text-[88px] mb-6" style="font-weight:800;">01</div>
+          <h3 class="display text-[24px] mb-3" style="font-weight:700;">Submit Your Brand</h3>
+          <p class="lede text-[15px]">Share your logo, voice and offer. One short form — we handle the rest.</p>
+        </div>
+        <div class="reveal process-step" style="transition-delay:0.1s;">
+          <div class="display stroke-text text-[88px] mb-6" style="font-weight:800;">02</div>
+          <h3 class="display text-[24px] mb-3" style="font-weight:700;">Review Your Site</h3>
+          <p class="lede text-[15px]">We design, you react. A focused round of feedback to dial in the details.</p>
+        </div>
+        <div class="reveal process-step" style="transition-delay:0.2s;">
+          <div class="display stroke-text text-[88px] mb-6" style="font-weight:800;">03</div>
+          <h3 class="display text-[24px] mb-3" style="font-weight:700;">Launch &amp; Scale</h3>
+          <p class="lede text-[15px]">Go live in days — then we optimize continuously as the clients come in.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHOWCASE ============ -->
+  <section id="work" class="py-24 md:py-32">
+    <div class="wrap">
+      <div class="reveal flex items-center gap-4 mb-14">
+        <span class="kicker">Selected Work</span>
+        <span class="hr flex-1"></span>
+        <span class="kicker">Representative builds</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+        <div class="reveal tile md:col-span-7" style="aspect-ratio: 16/10;">
+          <img src="https://placehold.co/1200x750/0a0a0c/c9a875?text=Lumière+Clinic" alt="Clinic site" />
+          <span class="tile-arrow">↗</span>
+          <div class="tile-overlay"><div class="tile-tag"><div class="kicker mb-1">Aesthetic Clinic</div><div class="display text-[22px]" style="font-weight:700;">Lumière</div></div></div>
+        </div>
+        <div class="reveal tile md:col-span-5" style="aspect-ratio: 16/10;">
+          <img src="https://placehold.co/900x560/0a0a0c/f6f5f3?text=Atelier+Skin" alt="Skincare brand site" />
+          <span class="tile-arrow">↗</span>
+          <div class="tile-overlay"><div class="tile-tag"><div class="kicker mb-1">Skincare Brand</div><div class="display text-[22px]" style="font-weight:700;">Atelier Skin</div></div></div>
+        </div>
+        <div class="reveal tile md:col-span-5" style="aspect-ratio: 16/11;">
+          <img src="https://placehold.co/900x620/0a0a0c/f6f5f3?text=Noir+Consulting" alt="Consulting site" />
+          <span class="tile-arrow">↗</span>
+          <div class="tile-overlay"><div class="tile-tag"><div class="kicker mb-1">High-Ticket Consulting</div><div class="display text-[22px]" style="font-weight:700;">Noir &amp; Co.</div></div></div>
+        </div>
+        <div class="reveal tile md:col-span-7" style="aspect-ratio: 16/9;">
+          <img src="https://placehold.co/1200x675/0a0a0c/c9a875?text=Vault+Personal+Brand" alt="Personal brand site" />
+          <span class="tile-arrow">↗</span>
+          <div class="tile-overlay"><div class="tile-tag"><div class="kicker mb-1">Personal Brand</div><div class="display text-[22px]" style="font-weight:700;">The Vault</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA + FORM ============ -->
+  <section id="start" class="py-24 md:py-36 border-t border-[var(--line)] relative">
+    <div class="wrap">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <!-- CTA copy -->
+        <div class="reveal">
+          <span class="kicker">Start Here</span>
+          <h2 class="display mt-7" style="font-size: clamp(38px,5.6vw,86px);">
+            READY TO<br />SCALE YOUR<br /><span class="accent-text">BRAND?</span>
+          </h2>
+          <p class="lede mt-8 max-w-[440px]" style="font-size:18px;">
+            Submit your brand and we'll come back with a plan to turn your site into a client machine — usually within 24 hours.
+          </p>
+          <div class="hr my-10 max-w-[440px]"></div>
+          <div class="flex flex-wrap gap-x-12 gap-y-4 max-w-[440px]">
+            <div><div class="display text-[22px]" style="font-weight:700;">No contracts</div><div class="kicker mt-1">Cancel anytime</div></div>
+            <div><div class="display text-[22px]" style="font-weight:700;">24h reply</div><div class="kicker mt-1">Fast onboarding</div></div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="reveal card p-8 md:p-10" id="formCard">
+          <form id="leadForm" class="flex flex-col gap-5" novalidate>
+            <div>
+              <label class="kicker block mb-3" for="name">Your Name</label>
+              <input class="field" id="name" name="name" type="text" placeholder="Jane Doe" required />
+            </div>
+            <div>
+              <label class="kicker block mb-3" for="email">Email</label>
+              <input class="field" id="email" name="email" type="email" placeholder="jane@brand.com" required />
+            </div>
+            <div>
+              <label class="kicker block mb-3" for="brand">Brand / Website</label>
+              <input class="field" id="brand" name="brand" type="text" placeholder="brand.com (optional)" />
+            </div>
+            <div>
+              <label class="kicker block mb-3" for="type">What do you need?</label>
+              <div class="select-wrap">
+                <select class="field" id="type" name="type">
+                  <option>Website — $250</option>
+                  <option>Website + Retainer — $250 + $99/mo</option>
+                  <option>Not sure yet — advise me</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="kicker block mb-3" for="msg">Tell us about your brand</label>
+              <textarea class="field" id="msg" name="msg" rows="3" placeholder="What you sell, who you sell to, and your goal."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-full justify-center mt-2">Send Project Brief <span class="arrow">→</span></button>
+            <p class="kicker text-center" style="color:var(--ink-4);">We reply within 24 hours · No spam, ever</p>
+          </form>
+
+          <!-- success state -->
+          <div id="formSuccess" class="hidden flex-col items-center text-center py-10">
+            <div class="display accent-text text-[40px] mb-4">✦</div>
+            <h3 class="display text-[28px] mb-3" style="font-weight:700;">Brief received.</h3>
+            <p class="lede max-w-[320px]">Thanks — we've got your details and will reply within 24 hours with next steps.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="border-t border-[var(--line)] pt-20 pb-12">
+    <div class="wrap">
+      <div class="flex flex-col lg:flex-row justify-between gap-12 mb-16">
+        <div class="max-w-[420px]">
+          <img src="brand%20assets/paradox_wordmark_t.png" alt="Paradox" style="height:34px; width:auto; margin-bottom:22px;" />
+          <p class="lede text-[15px]">Done-for-you websites engineered for conversion, not decoration. A client acquisition system disguised as a beautiful site.</p>
+        </div>
+        <div class="flex gap-16">
+          <div class="flex flex-col gap-4">
+            <span class="kicker mb-1">Menu</span>
+            <a href="#offer" class="nav-link">Offer</a>
+            <a href="#system" class="nav-link">Systems</a>
+            <a href="#process" class="nav-link">Process</a>
+            <a href="#work" class="nav-link">Work</a>
+          </div>
+          <div class="flex flex-col gap-4">
+            <span class="kicker mb-1">Connect</span>
+            <a href="#start" class="nav-link">Instagram</a>
+            <a href="#start" class="nav-link">X / Twitter</a>
+            <a href="#start" class="nav-link">Email</a>
+          </div>
+        </div>
+      </div>
+      <div class="hr mb-8"></div>
+      <div class="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+        <span class="kicker">© 2026 Paradox — All rights reserved</span>
+        <a href="#start" class="btn btn-ghost btn-sm">Start Your Website <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  // Nav background on scroll
+  const nav = document.querySelector('.nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 24);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // Hero bg icon — slow scroll-driven rotation
+  const bgIcon = document.getElementById('hero-bg-icon');
+  if (bgIcon) {
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const deg = window.scrollY * 0.04;
+          bgIcon.style.transform = `translateY(-50%) rotate(${deg}deg)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  // Hero stat numbers — count up with a settle-blur, replayed every time the
+  // strip scrolls into view. Vanilla adaptation of the iOS numericText /
+  // motion AnimateNumber idea: only the value transitions, blur is heaviest
+  // while spinning and clears as it eases to rest.
+  //   data-to / data-prefix : simple count (e.g. $250, 100)
+  //   data-range="5,7"       : counts both ends of a range (→ "5–7")
+  //   data-inf="999"         : counts 1 → 999, then morphs to ∞
+  // Honors prefers-reduced-motion (leaves the final value in place).
+  (function () {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const nums = Array.from(document.querySelectorAll('.stat-num'));
+    if (!nums.length) return;
+    if (reduce) return;
+
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+    const DASH = '–';
+    const DUR = 1700; // slower, more luxurious settle
+
+    function render(el, e) {
+      if (el.dataset.range) {
+        const [a, b] = el.dataset.range.split(',').map(Number);
+        el.textContent = Math.round(e * a) + DASH + Math.round(e * b);
+      } else if (el.dataset.inf) {
+        el.textContent = String(Math.round(1 + e * (parseInt(el.dataset.inf, 10) - 1)));
+      } else {
+        el.textContent = (el.dataset.prefix || '') + Math.round(e * parseInt(el.dataset.to, 10));
+      }
+    }
+
+    // Hold on 999, then dissolve through blur into the ∞ glyph.
+    function morphToInfinity(el) {
+      el.style.transition = 'filter 0.45s var(--ease), opacity 0.45s var(--ease)';
+      el.style.filter = 'blur(12px)';
+      el.style.opacity = '0';
+      setTimeout(() => {
+        el.textContent = '∞';
+        el.style.filter = 'blur(0px)';
+        el.style.opacity = '1';
+        setTimeout(() => { el.style.transition = ''; }, 480);
+      }, 220);
+    }
+
+    function animate(el) {
+      const isInf = !!el.dataset.inf;
+      el.style.transition = '';
+      el.style.opacity = '1';
+      el.style.willChange = 'filter, transform';
+      const start = performance.now();
+      function frame(now) {
+        const p = Math.min((now - start) / DUR, 1);
+        const e = easeOut(p);
+        render(el, e);
+        el.style.filter = `blur(${(1 - e) * 10}px)`;
+        el.style.transform = `translateY(${(1 - e) * 7}px)`;
+        if (p < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          render(el, 1);
+          el.style.transform = '';
+          el.style.willChange = 'auto';
+          if (isInf) { el.style.filter = 'blur(0px)'; setTimeout(() => morphToInfinity(el), 280); }
+          else { el.style.filter = ''; }
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    // Reset to the start state so the next entrance animates fresh.
+    function prime(el) {
+      el.style.transition = '';
+      el.style.opacity = '1';
+      render(el, 0);
+      el.style.filter = 'blur(10px)';
+      el.style.transform = 'translateY(7px)';
+    }
+
+    nums.forEach(prime);
+
+    const strip = nums[0].closest('.flex.flex-wrap') || nums[0].parentElement;
+    let inView = false;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.intersectionRatio >= 0.3 && !inView) {
+          inView = true;
+          nums.forEach((el, i) => setTimeout(() => animate(el), i * 150));
+        } else if (entry.intersectionRatio === 0 && inView) {
+          inView = false;
+          nums.forEach(prime);
+        }
+      });
+    }, { threshold: [0, 0.3] });
+    obs.observe(strip);
+  })();
+
+  // Wordmark scroll band — slide the watermark from off-screen right to
+  // off-screen left as the band travels through the viewport. Scroll sets a
+  // *target* position; a rAF loop eases the actual position toward it, so the
+  // motion is smooth (decoupled from chunky scroll deltas) and unhurried.
+  // Reverses naturally on scroll up; centered at the band's midpoint.
+  (function () {
+    const band = document.querySelector('.wordmark-band');
+    if (!band) return;
+    const img = band.querySelector('.wordmark-slide');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { img.style.transform = 'translate(-50%, -50%)'; return; }
+
+    let vw = window.innerWidth, vh = window.innerHeight, imgW = img.offsetWidth;
+    const SPAN_FACTOR = 2.1;  // scroll distance (× viewport) to cross — higher = slower
+    const EASE = 0.07;        // lerp smoothing — lower = silkier, more trailing
+
+    function targetX() {
+      const r = band.getBoundingClientRect();
+      const center = r.top + r.height / 2;          // band centre, viewport-relative
+      const span = vh * SPAN_FACTOR;
+      let p = 0.5 + (vh / 2 - center) / span;        // 0.5 when centred in viewport
+      p = Math.max(0, Math.min(1, p));
+      const startX = vw / 2 + imgW / 2 + 60;         // fully off-screen at the ends
+      return startX * (1 - 2 * p);                   // +right → 0 centred → -left
+    }
+
+    let curX = targetX();
+    let running = false;
+    function loop() {
+      const tgt = targetX();
+      curX += (tgt - curX) * EASE;
+      if (Math.abs(tgt - curX) < 0.1) curX = tgt;
+      img.style.transform = `translate(calc(-50% + ${curX.toFixed(2)}px), -50%)`;
+      if (Math.abs(tgt - curX) > 0.05) requestAnimationFrame(loop);
+      else running = false;
+    }
+    function kick() { if (!running) { running = true; requestAnimationFrame(loop); } }
+
+    img.style.transform = `translate(calc(-50% + ${curX.toFixed(2)}px), -50%)`;
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; imgW = img.offsetWidth; kick(); });
+  })();
+
+  // Custom cursor — the brand spark (✦). Position, rotation and scale are all
+  // eased inside a single continuous rAF loop, so motion stays smooth and is
+  // fully decoupled from the (sometimes coarse) mousemove event cadence. The
+  // spark drifts as it rotates, scales up + spins faster over interactive
+  // elements, pulses inward on press, and inverts to dark over gold buttons.
+  // Pointer devices only; honors prefers-reduced-motion.
+  (function () {
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!fine) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const spark = document.createElement('div');
+    spark.className = 'cursor-spark';
+    // Geometrically centred 4-point sparkle — its visual centre is (12,12),
+    // so translate(-50%,-50%) lands it exactly on the pointer and rotation
+    // spins in place (a text glyph would sit off-centre in its line box).
+    spark.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path fill="currentColor" d="M12 1C12.6 8.2 15.8 11.4 23 12C15.8 12.6 12.6 15.8 12 23C11.4 15.8 8.2 12.6 1 12C8.2 11.4 11.4 8.2 12 1Z"/>' +
+      '</svg>';
+    document.body.appendChild(spark);
+    document.documentElement.classList.add('has-cursor');
+
+    let mx = innerWidth / 2, my = innerHeight / 2;   // true pointer
+    let x = mx, y = my;                              // eased position
+    let angle = 0;                                   // current rotation
+    let scale = 1, scaleTarget = 1;                  // eased scale
+    let spin = 0.18;                                 // deg/frame at rest
+    let isHover = false, isDown = false, started = false;
+
+    function applyScale() {
+      let s = isHover ? 1.7 : 1;
+      if (isDown) s *= 0.6;
+      scaleTarget = s;
+      spin = isHover ? 0.85 : 0.18;
+    }
+
+    function frame() {
+      const posEase = reduce ? 1 : 0.16;
+      x += (mx - x) * posEase;
+      y += (my - y) * posEase;
+      scale += (scaleTarget - scale) * 0.16;
+      if (!reduce) angle = (angle + spin) % 360;
+      spark.style.transform =
+        `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) translate(-50%, -50%) rotate(${angle.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+      requestAnimationFrame(frame);
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      mx = e.clientX; my = e.clientY;
+      if (!started) { started = true; spark.classList.add('is-on'); frame(); }
+    }, { passive: true });
+
+    const INTERACTIVE = 'a, button, input, textarea, select, label, [role="button"], .tile, .card, .process-step, .aud-cell, .pillar';
+    const INVERT = '.btn-primary';
+    window.addEventListener('mouseover', (e) => {
+      isHover = !!e.target.closest(INTERACTIVE);
+      spark.classList.toggle('is-invert', !!e.target.closest(INVERT));
+      applyScale();
+    });
+
+    window.addEventListener('mousedown', () => { isDown = true; applyScale(); });
+    window.addEventListener('mouseup',   () => { isDown = false; applyScale(); });
+
+    // Fade out when the pointer leaves the window, back in on return.
+    document.addEventListener('mouseleave', () => spark.classList.remove('is-on'));
+    document.addEventListener('mouseenter', () => { if (started) spark.classList.add('is-on'); });
+  })();
+
+  // Form submit -> success state
+  const form = document.getElementById('leadForm');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    form.classList.add('hidden');
+    const ok = document.getElementById('formSuccess');
+    ok.classList.remove('hidden'); ok.classList.add('flex');
+  });
+</script>
+</body>
+</html>
