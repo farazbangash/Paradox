@@ -37,16 +37,23 @@ const server = createServer(async (req, res) => {
       return;
     }
 
-    const info = await stat(filePath).catch(() => null);
+    let resolved = filePath;
+    let info = await stat(resolved).catch(() => null);
+    // Clean-URL fallback (mirrors Vercel cleanUrls): /pricing -> /pricing.html
+    if ((!info || !info.isFile()) && !extname(resolved)) {
+      const alt = resolved + '.html';
+      const altInfo = await stat(alt).catch(() => null);
+      if (altInfo && altInfo.isFile()) { resolved = alt; info = altInfo; }
+    }
     if (!info || !info.isFile()) {
       res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' })
         .end('<h1>404 Not Found</h1>');
       return;
     }
 
-    const data = await readFile(filePath);
+    const data = await readFile(resolved);
     res.writeHead(200, {
-      'Content-Type': MIME[extname(filePath).toLowerCase()] || 'application/octet-stream',
+      'Content-Type': MIME[extname(resolved).toLowerCase()] || 'application/octet-stream',
       'Cache-Control': 'no-cache',
     }).end(data);
   } catch (err) {
