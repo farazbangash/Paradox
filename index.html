@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PARADOX — Websites That Print Clients</title>
-<meta name="description" content="Done-for-you websites engineered for conversion, not decoration. A client acquisition system built in 5–7 days." />
+<title>PARADOX - Websites That Print Clients</title>
+<meta name="description" content="Custom, high-converting websites that turn visitors into paying clients. Done-for-you web design for clinics, salons, and personal brands, launched in days." />
 <link rel="icon" type="image/png" href="brand%20assets/paradox_brand_assets.png" />
 
 <!-- Fonts: Syne (display) + Hanken Grotesk (body grotesk) -->
@@ -207,7 +207,7 @@
     display: inline-flex; align-items: center; gap: 12px;
     font-family: 'Hanken Grotesk', sans-serif; font-weight: 500; font-size: 14px;
     letter-spacing: 0.02em; padding: 17px 30px; border-radius: 2px;
-    cursor: pointer; position: relative; will-change: transform;
+    cursor: pointer; position: relative; will-change: transform; white-space: nowrap;
     transition: transform 0.5s var(--ease), background-color 0.4s var(--ease), color 0.4s var(--ease), box-shadow 0.5s var(--ease), border-color 0.4s var(--ease);
   }
   .btn .arrow { transition: transform 0.5s var(--ease); }
@@ -264,7 +264,34 @@
   /* Nav */
   .nav { transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease), backdrop-filter 0.5s var(--ease); }
   .nav.scrolled { background: rgba(0,0,0,0.6); backdrop-filter: blur(14px); border-bottom-color: var(--line); }
-  .nav-link { position: relative; color: var(--ink-2); font-size: 14px; transition: color 0.4s var(--ease); }
+  .nav-link { position: relative; color: var(--ink-2); font-size: 12px; transition: color 0.4s var(--ease); text-transform: uppercase; letter-spacing: 0.08em; }
+  .nav .btn { text-transform: uppercase; }
+  /* Mobile nav toggle (hamburger) */
+  .nav-toggle {
+    display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+    width: 44px; height: 44px; border-radius: 2px; flex: none;
+    border: 1px solid var(--line-2); background: rgba(246,245,243,0.015);
+    cursor: pointer; transition: border-color 0.4s var(--ease), background 0.4s var(--ease);
+  }
+  .nav-toggle span { display: block; width: 18px; height: 1.5px; background: var(--ink); transition: transform 0.4s var(--ease), opacity 0.3s var(--ease); }
+  .nav-toggle:hover { border-color: rgba(246,245,243,0.34); background: rgba(246,245,243,0.04); }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(3.25px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { transform: translateY(-3.25px) rotate(-45deg); }
+  @media (min-width: 1024px) { .nav-toggle { display: none; } }
+  /* Full-screen mobile menu */
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 40;
+    background: rgba(0,0,0,0.94); backdrop-filter: blur(18px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transform: translateY(-10px);
+    transition: opacity 0.5s var(--ease), visibility 0.5s var(--ease), transform 0.5s var(--ease);
+  }
+  .mobile-menu.open { opacity: 1; visibility: visible; transform: none; }
+  .mobile-menu-inner { display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; padding: 24px; }
+  .m-link { font-family: 'Syne', sans-serif; font-weight: 700; font-size: clamp(26px, 7vw, 36px); letter-spacing: -0.02em; color: var(--ink); transition: color 0.3s var(--ease); }
+  .m-link:hover, .m-link:focus-visible { color: var(--accent); }
+  .m-link.is-current { color: var(--accent); }
+  @media (min-width: 1024px) { .mobile-menu { display: none; } }
   .nav-link::after {
     content: ''; position: absolute; left: 0; bottom: -6px; height: 1px; width: 100%;
     background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease);
@@ -302,23 +329,34 @@
     border-color: rgba(201,168,117,0.34);
     box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 44px 84px -46px rgba(0,0,0,1), 0 0 54px -28px rgba(201,168,117,0.4);
   }
-  .tile img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s var(--ease), opacity 0.6s var(--ease); opacity: 0.86; }
-  .tile:hover img { transform: scale(1.05); opacity: 1; }
-  /* warm color treatment that washes in on hover */
+  /* Project photo: dimmed, desaturated and warm-tinted so it sits quietly behind the text */
+  .tile img {
+    position: absolute; inset: 0; z-index: 0;
+    display: block; width: 100%; height: 100%; object-fit: cover;
+    opacity: 0.42; filter: grayscale(0.6) sepia(0.18) brightness(0.82) contrast(1.03);
+    transition: transform 0.9s var(--ease), opacity 0.6s var(--ease), filter 0.6s var(--ease);
+  }
+  .tile:hover img { transform: scale(1.08); opacity: 0.55; filter: grayscale(0.4) sepia(0.12) brightness(0.9) contrast(1.05); }
+  /* Brighter source photos get pulled down to match the others */
+  .tile img.is-light { opacity: 0.30; filter: grayscale(0.66) sepia(0.2) brightness(0.6) contrast(1.05); }
+  .tile:hover img.is-light { opacity: 0.4; filter: grayscale(0.46) sepia(0.14) brightness(0.68) contrast(1.07); }
+  /* Always-on unifying tint (warm + darken) over the photo */
+  .tile::before {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      linear-gradient(160deg, rgba(201,168,117,0.10), transparent 46%),
+      linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.42));
+  }
+  /* Signature hover: a glowing accent line draws across the base */
   .tile::after {
-    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
-    background: linear-gradient(160deg, rgba(201,168,117,0.18), transparent 55%);
-    mix-blend-mode: overlay; opacity: 0; transition: opacity 0.6s var(--ease);
+    content: ''; position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; z-index: 3;
+    background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    opacity: 0;
+    transition: transform 0.6s var(--ease), opacity 0.4s var(--ease);
+    box-shadow: 0 0 18px 0 rgba(201,168,117,0.55);
   }
-  .tile:hover::after { opacity: 1; }
-  .tile-overlay {
-    position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 22px; z-index: 2;
-    background: linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0.05) 55%, transparent);
-    opacity: 0; transition: opacity 0.6s var(--ease);
-  }
-  .tile:hover .tile-overlay { opacity: 1; }
-  .tile-tag { transform: translateY(8px); transition: transform 0.6s var(--ease); }
-  .tile:hover .tile-tag { transform: none; }
+  .tile:hover::after { transform: scaleX(1); opacity: 1; }
   /* glassy corner cue */
   .tile-arrow {
     position: absolute; top: 16px; right: 16px; z-index: 3;
@@ -329,7 +367,32 @@
     opacity: 0; transform: translateY(-6px) scale(0.85);
     transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), background 0.4s var(--ease), border-color 0.4s var(--ease);
   }
-  .tile:hover .tile-arrow { opacity: 1; transform: none; border-color: rgba(201,168,117,0.5); background: rgba(201,168,117,0.14); }
+  .tile:hover .tile-arrow { opacity: 1; transform: translate(3px, -3px) scale(1.05); border-color: rgba(201,168,117,0.5); background: rgba(201,168,117,0.14); }
+  /* Designed gradient thumbnail (stands in for a real screenshot) */
+  .tile-thumb {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(120% 130% at 16% 10%, rgba(201,168,117,0.16), transparent 52%),
+      linear-gradient(155deg, var(--c1, #131316), var(--c2, #08080a));
+    transition: transform 0.9s var(--ease);
+  }
+  .tile:hover .tile-thumb { transform: scale(1.08); }
+  /* Large editorial index number, outlined */
+  .tile-idx {
+    position: absolute; top: 14px; left: 22px; z-index: 1;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 56px; line-height: 1;
+    letter-spacing: -0.03em; color: transparent;
+    -webkit-text-stroke: 1px rgba(246,245,243,0.12);
+    transition: transform 0.6s var(--ease), -webkit-text-stroke-color 0.5s var(--ease);
+  }
+  .tile:hover .tile-idx { transform: translateY(-3px); -webkit-text-stroke-color: rgba(201,168,117,0.55); }
+  /* Always-visible caption bar */
+  .tile-cap {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 22px;
+    background: linear-gradient(to top, rgba(0,0,0,0.86), rgba(0,0,0,0.2) 64%, transparent);
+  }
+  .tile-metric { transform-origin: right; transition: transform 0.6s var(--ease); }
+  .tile:hover .tile-metric { transform: translateY(-2px) scale(1.06); }
 
   /* Numbered pillar */
   .pillar { border-top: 1px solid var(--line); transition: border-color 0.5s var(--ease); position: relative; }
@@ -390,6 +453,72 @@
   /* over gold surfaces (primary buttons): invert to dark for contrast */
   .cursor-spark.is-invert { color: #120d04; filter: none; }
 
+  /* ===== Preloader — brand mark, gold progress line, count-up ===== */
+  .preloader {
+    position: fixed; inset: 0; z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(120% 90% at 50% 28%, #0b0a07 0%, #000 62%);
+    transition: opacity 0.8s var(--ease), visibility 0.8s var(--ease);
+  }
+  .preloader.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+  .pre-inner { display: flex; flex-direction: column; align-items: center; gap: 26px; width: min(78vw, 216px); }
+  .pre-mark {
+    height: 58px; width: auto; will-change: transform, opacity;
+    filter: drop-shadow(0 0 24px rgba(201,168,117,0.35));
+    animation: prePulse 1.8s var(--ease) infinite;
+  }
+  @keyframes prePulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.06); opacity: 1; }
+  }
+  .pre-bar { position: relative; width: 100%; height: 1px; background: rgba(246,245,243,0.14); overflow: hidden; }
+  .pre-bar-fill {
+    position: absolute; left: 0; top: 0; height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--accent-deep), var(--accent-bright));
+    box-shadow: 0 0 12px rgba(201,168,117,0.6);
+  }
+  .pre-meta { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+  .pre-label { font-family: 'Hanken Grotesk', sans-serif; font-weight: 500; font-size: 11px; letter-spacing: 0.34em; text-transform: uppercase; color: var(--ink-3); }
+  .pre-count { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .pre-inner { transition: opacity 0.35s var(--ease); }
+  .preloader.counted .pre-inner { opacity: 0; }
+  /* Wordmark stamp — materialises at centre, holds, then dissolves into the reveal */
+  .pre-wordmark {
+    position: absolute; top: 50%; left: 50%;
+    height: clamp(40px, 7vw, 84px); width: auto;
+    transform: translate(-50%, -50%) scale(0.94); opacity: 0;
+    pointer-events: none; will-change: transform, opacity, filter;
+    filter: blur(12px) drop-shadow(0 0 28px rgba(201,168,117,0.32));
+  }
+  .pre-wordmark.go { animation: wordmarkStamp 1.15s var(--ease-2) forwards; }
+  @keyframes wordmarkStamp {
+    0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.94); filter: blur(12px) drop-shadow(0 0 26px rgba(201,168,117,0.30)); }
+    34%  { opacity: 1; transform: translate(-50%,-50%) scale(1);    filter: blur(0px)  drop-shadow(0 0 30px rgba(201,168,117,0.40)); }
+    70%  { opacity: 1; transform: translate(-50%,-50%) scale(1);    filter: blur(0px)  drop-shadow(0 0 30px rgba(201,168,117,0.40)); }
+    100% { opacity: 0; transform: translate(-50%,-50%) scale(1.03); filter: blur(6px)  drop-shadow(0 0 26px rgba(201,168,117,0.30)); }
+  }
+  /* Subtle gold shimmer that sweeps across the wordmark letters during the hold */
+  .pre-shine {
+    position: absolute; top: 50%; left: 50%;
+    height: clamp(40px, 7vw, 84px); width: min(96vw, 700px);
+    transform: translate(-50%, -50%);
+    pointer-events: none; opacity: 0;
+    -webkit-mask: url("brand%20assets/paradox_wordmark_t.png") center / contain no-repeat;
+            mask: url("brand%20assets/paradox_wordmark_t.png") center / contain no-repeat;
+  }
+  .pre-shine::before {
+    content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 55%;
+    background: linear-gradient(105deg, transparent 0%, rgba(245,226,184,0) 32%, rgba(245,226,184,0.5) 50%, rgba(245,226,184,0) 68%, transparent 100%);
+    transform: translateX(-180%);
+  }
+  .pre-wordmark.go ~ .pre-shine { opacity: 1; }
+  .pre-wordmark.go ~ .pre-shine::before { animation: preShine 0.75s var(--ease) 0.42s 1 both; }
+  @keyframes preShine {
+    0%   { transform: translateX(-180%); }
+    100% { transform: translateX(220%); }
+  }
+  @media (prefers-reduced-motion: reduce) { .pre-mark { animation: none; } }
+
   @media (max-width: 768px) {
     .display { line-height: 1.0; }
   }
@@ -397,6 +526,20 @@
 </head>
 
 <body>
+<!-- ============ PRELOADER ============ -->
+<div id="preloader" class="preloader" role="status" aria-label="Loading Paradox">
+  <div class="pre-inner">
+    <img class="pre-mark" src="brand%20assets/paradox_icon_t.png" alt="Paradox" />
+    <div class="pre-bar"><span class="pre-bar-fill"></span></div>
+    <div class="pre-meta">
+      <span class="pre-label">Paradox</span>
+      <span class="pre-count">00</span>
+    </div>
+  </div>
+  <img class="pre-wordmark" src="brand%20assets/paradox_wordmark_t.png" alt="" aria-hidden="true" />
+  <span class="pre-shine" aria-hidden="true"></span>
+</div>
+
 <div class="bg-grid"></div>
 <div class="atmosphere">
   <span class="glow glow-1"></span>
@@ -413,20 +556,37 @@
       <img src="brand%20assets/paradox_icon_t.png" alt="" style="height: 34px; width:auto;" />
       <img src="brand%20assets/paradox_wordmark_t.png" alt="Paradox" class="hidden sm:inline" style="height: 20px; width:auto;" />
     </a>
-    <div class="hidden md:flex items-center gap-9">
+    <div class="hidden lg:flex items-center gap-9">
       <a href="#offer" class="nav-link">Offer</a>
       <a href="#system" class="nav-link">Systems</a>
       <a href="#process" class="nav-link">Process</a>
-      <a href="#work" class="nav-link">Work</a>
+      <a href="work.html" class="nav-link">Work</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
     </div>
-    <a href="#start" class="btn btn-primary btn-sm">Get Started <span class="arrow">→</span></a>
+    <div class="flex items-center gap-3">
+      <a href="#start" class="btn btn-primary btn-sm">Get Started <span class="arrow">→</span></a>
+      <button id="navToggle" class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
   </div>
 </nav>
+
+<!-- ============ MOBILE MENU ============ -->
+<div id="mobileMenu" class="mobile-menu" aria-hidden="true">
+  <nav class="mobile-menu-inner" aria-label="Mobile">
+    <a href="#offer" class="m-link">Offer</a>
+    <a href="#system" class="m-link">Systems</a>
+    <a href="#process" class="m-link">Process</a>
+    <a href="work.html" class="m-link">Work</a>
+    <a href="pricing.html" class="m-link">Pricing</a>
+  </nav>
+</div>
 
 <main id="top" class="content">
 
   <!-- ============ HERO ============ -->
-  <section class="relative min-h-screen flex flex-col justify-center pt-28 pb-16">
+  <section class="relative min-h-screen flex flex-col justify-center pt-28 pb-16 overflow-hidden">
     <!-- oversized watermark icon -->
     <img id="hero-bg-icon" src="brand%20assets/paradox_icon_t.png" alt=""
          class="pointer-events-none select-none hidden lg:block"
@@ -446,8 +606,7 @@
       </h1>
 
       <p class="lede rise max-w-[560px] mt-9" style="font-size: clamp(16px,1.4vw,20px); animation-delay: 0.22s;">
-        Done-for-you websites engineered for conversion, not decoration —
-        a client acquisition system disguised as a beautiful site.
+        We design custom, high-converting websites that turn visitors into paying clients. Yours launches in days and is built to grow revenue, not just sit there looking pretty.
       </p>
 
       <div class="rise flex flex-wrap items-center gap-4 mt-11" style="animation-delay: 0.32s;">
@@ -487,10 +646,21 @@
       <span class="display mx-7" style="font-weight:700; text-transform:none;">Aesthetic Brands</span><span class="accent-text mx-3">✦</span>
       <span class="display mx-7" style="font-weight:700; text-transform:none;">Personal Brands</span><span class="accent-text mx-3">✦</span>
       <span class="display mx-7" style="font-weight:700; text-transform:none;">High-Ticket Services</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Barbershops</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Small Businesses</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Roofing</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Tech and AI</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Online Stores</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Salons and Spa</span><span class="accent-text mx-3">✦</span>
       <span class="display mx-7" style="font-weight:700; text-transform:none;">Clinics</span><span class="accent-text mx-3">✦</span>
       <span class="display mx-7" style="font-weight:700; text-transform:none;">Aesthetic Brands</span><span class="accent-text mx-3">✦</span>
       <span class="display mx-7" style="font-weight:700; text-transform:none;">Personal Brands</span><span class="accent-text mx-3">✦</span>
       <span class="display mx-7" style="font-weight:700; text-transform:none;">High-Ticket Services</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Barbershops</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Small Businesses</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Roofing</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Tech and AI</span><span class="accent-text mx-3">✦</span>
+      <span class="display mx-7" style="font-weight:700; text-transform:none;">Online Stores</span><span class="accent-text mx-3">✦</span>
     </div>
   </section>
 
@@ -499,7 +669,7 @@
     <div class="wrap">
       <div class="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
         <h2 class="display" style="font-size: clamp(30px,4.4vw,58px);">Built for brands<br />that sell.</h2>
-        <p class="lede max-w-[360px] md:text-right">We work with operators who treat their website as revenue infrastructure — not a brochure.</p>
+        <p class="lede max-w-[360px] md:text-right">We work with operators who treat their website as revenue infrastructure, not a brochure.</p>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--line)] border border-[var(--line)] rounded">
         <div class="reveal aud-cell bg-ink p-8 lg:p-10 group transition-colors duration-500 hover:bg-[var(--bg-1)]">
@@ -535,48 +705,72 @@
         <span class="kicker">No retainers required to start</span>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Website -->
-        <div class="reveal card p-9 md:p-12 flex flex-col">
-          <div class="flex items-start justify-between mb-10">
-            <div>
-              <div class="kicker mb-4">The Website</div>
-              <div class="flex items-end gap-2">
-                <span class="display text-[64px] md:text-[78px]" style="font-weight:800;">$250</span>
-                <span class="lede mb-4">one-time</span>
-              </div>
-            </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Card 1: Website -->
+        <div class="reveal card p-9 md:p-10 flex flex-col">
+          <div class="flex items-center justify-between mb-6">
+            <div class="kicker" style="color:rgba(201,168,117,0.45);">The Website</div>
             <span class="num text-[15px]">01</span>
           </div>
-          <ul class="flex flex-col gap-4 mb-10">
+          <div class="flex flex-wrap items-end gap-x-2 gap-y-1 mb-9" style="min-height:70px;">
+            <span class="display text-[56px] md:text-[64px]" style="font-weight:800; line-height:0.85;">$250</span>
+            <span class="lede mb-2" style="white-space:nowrap;">one-time</span>
+          </div>
+          <ul class="flex flex-col gap-4 mb-9 flex-1">
             <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Built in 5–7 days</span></li>
             <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Conversion-focused architecture</span></li>
             <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Fully mobile optimized</span></li>
-            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Custom design — never templated</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Custom design, never templated</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Pages: Home, Services, About & Contact</span></li>
           </ul>
+          <div class="hr mb-5" style="opacity:0.5;"></div>
+          <p class="kicker mb-6" style="color:var(--ink-3);">Typical timeline: 5–7 days</p>
           <div class="mt-auto"><a href="#start" class="btn btn-ghost w-full justify-center">Start with the site <span class="arrow">→</span></a></div>
         </div>
 
-        <!-- Retainer (featured) -->
-        <div class="reveal card card-featured p-9 md:p-12 flex flex-col relative">
-          <span class="absolute top-6 right-6 kicker accent-text" style="color:var(--accent);">Most chosen</span>
-          <div class="flex items-start justify-between mb-10">
-            <div>
-              <div class="kicker mb-4">The Retainer</div>
-              <div class="flex items-end gap-2">
-                <span class="display text-[64px] md:text-[78px] accent-text" style="font-weight:800;">$99</span>
-                <span class="lede mb-4">/ month</span>
-              </div>
-            </div>
+        <!-- Card 2: Retainer (featured) -->
+        <div class="reveal card card-featured p-9 md:p-10 flex flex-col relative">
+          <span class="absolute left-1/2 -translate-x-1/2 -top-3 kicker accent-text px-4 py-1.5 rounded-full" style="color:var(--accent); background:var(--bg-2); border:1px solid rgba(201,168,117,0.32);">Most chosen</span>
+          <div class="flex items-center justify-between mb-6">
+            <div class="kicker" style="color:rgba(201,168,117,0.45);">The Retainer</div>
             <span class="num text-[15px]">02</span>
           </div>
-          <ul class="flex flex-col gap-4 mb-10">
+          <div class="flex flex-wrap items-end gap-x-2 gap-y-1 mb-9" style="min-height:70px;">
+            <span class="display text-[56px] md:text-[64px] accent-text" style="font-weight:800; line-height:0.85;">$250</span>
+            <span class="lede mb-2" style="white-space:nowrap;">+ $99/mo</span>
+          </div>
+          <ul class="flex flex-col gap-4 mb-9 flex-1">
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Everything in The Website</span></li>
             <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Unlimited edits & requests</span></li>
             <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Ongoing maintenance & uptime</span></li>
             <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Continuous conversion improvements</span></li>
             <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Priority support & reporting</span></li>
           </ul>
+          <div class="hr mb-5" style="opacity:0.5;"></div>
+          <p class="kicker mb-6" style="color:var(--ink-3);">Typical timeline: 5–7 days · Cancel anytime</p>
           <div class="mt-auto"><a href="#start" class="btn btn-primary w-full justify-center">Get the full system <span class="arrow">→</span></a></div>
+        </div>
+
+        <!-- Card 3: Custom -->
+        <div class="reveal card p-9 md:p-10 flex flex-col">
+          <div class="flex items-center justify-between mb-6">
+            <div class="kicker" style="color:rgba(201,168,117,0.45);">Custom Build</div>
+            <span class="num text-[15px]">03</span>
+          </div>
+          <div class="flex flex-wrap items-end gap-x-2 gap-y-1 mb-9" style="min-height:70px;">
+            <span class="display text-[40px] sm:text-[44px] md:text-[50px] lg:text-[40px] xl:text-[50px]" style="font-weight:800; line-height:0.95;">Custom</span>
+            <span class="lede mb-1.5" style="white-space:nowrap;">by scope</span>
+          </div>
+          <ul class="flex flex-col gap-4 mb-9 flex-1">
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Everything in The Retainer</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Fully tailored layout & design system</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Custom animations & interactions</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">1–2 revision rounds before launch</span></li>
+            <li class="flex items-start gap-3"><span class="tick mt-1">✦</span><span class="lede" style="color:var(--ink);">Priority attention throughout</span></li>
+          </ul>
+          <div class="hr mb-5" style="opacity:0.5;"></div>
+          <p class="kicker mb-6" style="color:var(--ink-3);">Typical timeline: 2–4 weeks</p>
+          <div class="mt-auto"><a href="#start" class="btn btn-ghost w-full justify-center">Contact us <span class="arrow">→</span></a></div>
         </div>
       </div>
     </div>
@@ -597,7 +791,7 @@
           It's a <span class="accent-text">client acquisition</span> system.
         </h2>
         <p class="lede mt-9 max-w-[620px]" style="font-size:18px;">
-          Most sites decorate. Ours are engineered — every section, every line, every pixel
+          Most sites decorate. Ours are engineered, every section, every line, every pixel
           exists to move a stranger one step closer to becoming a paying client.
         </p>
       </div>
@@ -625,7 +819,7 @@
             <span class="accent-text text-[20px] pillar-mark">✦</span>
           </div>
           <h3 class="display text-[26px] mb-4" style="font-weight:700;">Ongoing Optimization</h3>
-          <p class="lede text-[15px]">We watch the data and keep tightening — your site compounds instead of decaying.</p>
+          <p class="lede text-[15px]">We watch the data and keep tightening, your site compounds instead of decaying.</p>
         </div>
       </div>
     </div>
@@ -643,7 +837,7 @@
         <div class="reveal process-step">
           <div class="display stroke-text text-[88px] mb-6" style="font-weight:800;">01</div>
           <h3 class="display text-[24px] mb-3" style="font-weight:700;">Submit Your Brand</h3>
-          <p class="lede text-[15px]">Share your logo, voice and offer. One short form — we handle the rest.</p>
+          <p class="lede text-[15px]">Share your logo, voice and offer. One short form, we handle the rest.</p>
         </div>
         <div class="reveal process-step" style="transition-delay:0.1s;">
           <div class="display stroke-text text-[88px] mb-6" style="font-weight:800;">02</div>
@@ -653,7 +847,7 @@
         <div class="reveal process-step" style="transition-delay:0.2s;">
           <div class="display stroke-text text-[88px] mb-6" style="font-weight:800;">03</div>
           <h3 class="display text-[24px] mb-3" style="font-weight:700;">Launch &amp; Scale</h3>
-          <p class="lede text-[15px]">Go live in days — then we optimize continuously as the clients come in.</p>
+          <p class="lede text-[15px]">Go live in days, then we optimize continuously as the clients come in.</p>
         </div>
       </div>
     </div>
@@ -670,24 +864,76 @@
 
       <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
         <div class="reveal tile md:col-span-7" style="aspect-ratio: 16/10;">
-          <img src="https://placehold.co/1200x750/0a0a0c/c9a875?text=Lumière+Clinic" alt="Clinic site" />
+          <div class="tile-thumb" style="--c1:#15110b; --c2:#0a0a0c;"></div>
+          <img src="https://images.unsplash.com/photo-1666214280557-f1b5022eb634?w=1200&q=70&auto=format&fit=crop" alt="Aesthetic clinic" loading="lazy" />
+          <span class="tile-idx">01</span>
           <span class="tile-arrow">↗</span>
-          <div class="tile-overlay"><div class="tile-tag"><div class="kicker mb-1">Aesthetic Clinic</div><div class="display text-[22px]" style="font-weight:700;">Lumière</div></div></div>
+          <div class="tile-cap">
+            <div class="flex items-end justify-between gap-4">
+              <div>
+                <div class="kicker mb-2" style="color:var(--ink-3);">Aesthetic Clinic</div>
+                <div class="display text-[22px]" style="font-weight:700;">Lumière</div>
+              </div>
+              <div class="tile-metric text-right">
+                <div class="display accent-text text-[22px]" style="font-weight:800; line-height:1;">+38%</div>
+                <div class="kicker mt-1" style="font-size:10px; letter-spacing:0.16em; color:var(--ink-3);">Bookings</div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="reveal tile md:col-span-5" style="aspect-ratio: 16/10;">
-          <img src="https://placehold.co/900x560/0a0a0c/f6f5f3?text=Atelier+Skin" alt="Skincare brand site" />
+          <div class="tile-thumb" style="--c1:#101015; --c2:#08080a;"></div>
+          <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1200&q=70&auto=format&fit=crop" alt="Skincare product" loading="lazy" class="is-light" />
+          <span class="tile-idx">02</span>
           <span class="tile-arrow">↗</span>
-          <div class="tile-overlay"><div class="tile-tag"><div class="kicker mb-1">Skincare Brand</div><div class="display text-[22px]" style="font-weight:700;">Atelier Skin</div></div></div>
+          <div class="tile-cap">
+            <div class="flex items-end justify-between gap-4">
+              <div>
+                <div class="kicker mb-2" style="color:var(--ink-3);">Skincare Brand</div>
+                <div class="display text-[22px]" style="font-weight:700;">Atelier Skin</div>
+              </div>
+              <div class="tile-metric text-right">
+                <div class="display accent-text text-[22px]" style="font-weight:800; line-height:1;">2.4×</div>
+                <div class="kicker mt-1" style="font-size:10px; letter-spacing:0.16em; color:var(--ink-3);">Conversion</div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="reveal tile md:col-span-5" style="aspect-ratio: 16/11;">
-          <img src="https://placehold.co/900x620/0a0a0c/f6f5f3?text=Noir+Consulting" alt="Consulting site" />
+          <div class="tile-thumb" style="--c1:#171206; --c2:#0b0a08;"></div>
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=70&auto=format&fit=crop" alt="Modern consulting office" loading="lazy" />
+          <span class="tile-idx">03</span>
           <span class="tile-arrow">↗</span>
-          <div class="tile-overlay"><div class="tile-tag"><div class="kicker mb-1">High-Ticket Consulting</div><div class="display text-[22px]" style="font-weight:700;">Noir &amp; Co.</div></div></div>
+          <div class="tile-cap">
+            <div class="flex items-end justify-between gap-4">
+              <div>
+                <div class="kicker mb-2" style="color:var(--ink-3);">High-Ticket Consulting</div>
+                <div class="display text-[22px]" style="font-weight:700;">Noir &amp; Co.</div>
+              </div>
+              <div class="tile-metric text-right">
+                <div class="display accent-text text-[22px]" style="font-weight:800; line-height:1;">+52%</div>
+                <div class="kicker mt-1" style="font-size:10px; letter-spacing:0.16em; color:var(--ink-3);">Leads</div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="reveal tile md:col-span-7" style="aspect-ratio: 16/9;">
-          <img src="https://placehold.co/1200x675/0a0a0c/c9a875?text=Vault+Personal+Brand" alt="Personal brand site" />
+          <div class="tile-thumb" style="--c1:#0e0f12; --c2:#090909;"></div>
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=70&auto=format&fit=crop" alt="Personal brand portrait" loading="lazy" class="is-light" />
+          <span class="tile-idx">04</span>
           <span class="tile-arrow">↗</span>
-          <div class="tile-overlay"><div class="tile-tag"><div class="kicker mb-1">Personal Brand</div><div class="display text-[22px]" style="font-weight:700;">The Vault</div></div></div>
+          <div class="tile-cap">
+            <div class="flex items-end justify-between gap-4">
+              <div>
+                <div class="kicker mb-2" style="color:var(--ink-3);">Personal Brand</div>
+                <div class="display text-[22px]" style="font-weight:700;">The Vault</div>
+              </div>
+              <div class="tile-metric text-right">
+                <div class="display accent-text text-[22px]" style="font-weight:800; line-height:1;">3.1×</div>
+                <div class="kicker mt-1" style="font-size:10px; letter-spacing:0.16em; color:var(--ink-3);">Inquiries</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -704,7 +950,7 @@
             READY TO<br />SCALE YOUR<br /><span class="accent-text">BRAND?</span>
           </h2>
           <p class="lede mt-8 max-w-[440px]" style="font-size:18px;">
-            Submit your brand and we'll come back with a plan to turn your site into a client machine — usually within 24 hours.
+            Submit your brand and we'll come back with a plan to turn your site into a client machine, usually within 24 hours.
           </p>
           <div class="hr my-10 max-w-[440px]"></div>
           <div class="flex flex-wrap gap-x-12 gap-y-4 max-w-[440px]">
@@ -732,9 +978,9 @@
               <label class="kicker block mb-3" for="type">What do you need?</label>
               <div class="select-wrap">
                 <select class="field" id="type" name="type">
-                  <option>Website — $250</option>
-                  <option>Website + Retainer — $250 + $99/mo</option>
-                  <option>Not sure yet — advise me</option>
+                  <option>Website - $250</option>
+                  <option>Website + Retainer - $250 + $99/mo</option>
+                  <option>Not sure yet - advise me</option>
                 </select>
               </div>
             </div>
@@ -750,7 +996,7 @@
           <div id="formSuccess" class="hidden flex-col items-center text-center py-10">
             <div class="display accent-text text-[40px] mb-4">✦</div>
             <h3 class="display text-[28px] mb-3" style="font-weight:700;">Brief received.</h3>
-            <p class="lede max-w-[320px]">Thanks — we've got your details and will reply within 24 hours with next steps.</p>
+            <p class="lede max-w-[320px]">Thanks, we've got your details and will reply within 24 hours with next steps.</p>
           </div>
         </div>
       </div>
@@ -763,7 +1009,7 @@
       <div class="flex flex-col lg:flex-row justify-between gap-12 mb-16">
         <div class="max-w-[420px]">
           <img src="brand%20assets/paradox_wordmark_t.png" alt="Paradox" style="height:34px; width:auto; margin-bottom:22px;" />
-          <p class="lede text-[15px]">Done-for-you websites engineered for conversion, not decoration. A client acquisition system disguised as a beautiful site.</p>
+          <p class="lede text-[15px]">Paradox designs high-converting, custom websites for clinics, salons, personal brands, and high-ticket services. Done-for-you web design engineered to turn visitors into paying clients.</p>
         </div>
         <div class="flex gap-16">
           <div class="flex flex-col gap-4">
@@ -771,7 +1017,8 @@
             <a href="#offer" class="nav-link">Offer</a>
             <a href="#system" class="nav-link">Systems</a>
             <a href="#process" class="nav-link">Process</a>
-            <a href="#work" class="nav-link">Work</a>
+            <a href="work.html" class="nav-link">Work</a>
+            <a href="pricing.html" class="nav-link">Pricing</a>
           </div>
           <div class="flex flex-col gap-4">
             <span class="kicker mb-1">Connect</span>
@@ -783,7 +1030,7 @@
       </div>
       <div class="hr mb-8"></div>
       <div class="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <span class="kicker">© 2026 Paradox — All rights reserved</span>
+        <span class="kicker">© 2026 Paradox - All rights reserved</span>
         <a href="#start" class="btn btn-ghost btn-sm">Start Your Website <span class="arrow">→</span></a>
       </div>
     </div>
@@ -792,11 +1039,64 @@
 </main>
 
 <script>
+  // Preloader — brand count-up + gold line fill, then dissolve
+  (function () {
+    const pre = document.getElementById('preloader');
+    if (!pre) return;
+    const fill = pre.querySelector('.pre-bar-fill');
+    const count = pre.querySelector('.pre-count');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const DUR = reduce ? 350 : 1400;
+    const start = performance.now();
+    const ease = (t) => 1 - Math.pow(1 - t, 2);
+    let revealed = false;
+    function reveal() {
+      if (revealed) return; revealed = true;
+      pre.classList.add('is-done');
+      setTimeout(() => pre.remove(), 850);
+    }
+    function finish() {
+      if (reduce) { reveal(); return; }
+      pre.classList.add('counted');           // fade out the icon / bar / count
+      const wm = pre.querySelector('.pre-wordmark');
+      if (!wm) { reveal(); return; }
+      wm.classList.add('go');                 // wordmark streaks right -> left
+      wm.addEventListener('animationend', reveal, { once: true });
+      setTimeout(reveal, 1200);               // safety fallback
+    }
+    function frame(now) {
+      const p = Math.min((now - start) / DUR, 1);
+      const pct = Math.round(ease(p) * 100);
+      if (fill) fill.style.width = pct + '%';
+      if (count) count.textContent = String(pct).padStart(2, '0');
+      if (p < 1) requestAnimationFrame(frame); else finish();
+    }
+    requestAnimationFrame(frame);
+  })();
+
   // Nav background on scroll
   const nav = document.querySelector('.nav');
   const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 24);
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Mobile menu toggle
+  (function () {
+    const toggle = document.getElementById('navToggle');
+    const menu = document.getElementById('mobileMenu');
+    if (!toggle || !menu) return;
+    const setOpen = (open) => {
+      toggle.classList.toggle('open', open);
+      menu.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.setAttribute('aria-hidden', String(!open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+    toggle.addEventListener('click', () => setOpen(!menu.classList.contains('open')));
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+  })();
 
   // Scroll reveal
   const io = new IntersectionObserver((entries) => {
