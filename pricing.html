@@ -340,7 +340,15 @@
 
   @media (max-width: 768px) {
     .display { line-height: 1.0; }
+    /* Make the brand watermark clearly visible (but subtle) on phones */
+    #hero-bg-icon { opacity: 0.11 !important; height: min(54vh, 440px) !important; }
   }
+  /* Touch devices have no hover — add tap feedback so it isn't bland */
+  @media (hover: none) {
+    .nav-link::after { display: none; }
+  }
+  .btn:active { transform: scale(0.97); }
+  .card:active { transform: translateY(-2px); }
 </style>
 </head>
 

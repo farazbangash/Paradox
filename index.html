@@ -521,7 +521,19 @@
 
   @media (max-width: 768px) {
     .display { line-height: 1.0; }
+    /* Make the brand watermark clearly visible (but subtle) on phones */
+    #hero-bg-icon { opacity: 0.11 !important; height: min(54vh, 440px) !important; }
   }
+  /* Touch devices have no hover — surface the key effects + add tap feedback so it isn't bland */
+  @media (hover: none) {
+    .tile img { opacity: 0.55; filter: grayscale(0.4) sepia(0.12) brightness(0.9) contrast(1.05); }
+    .tile img.is-light { opacity: 0.42; filter: grayscale(0.46) sepia(0.14) brightness(0.68) contrast(1.07); }
+    .tile-arrow { opacity: 1; transform: none; border-color: rgba(201,168,117,0.45); background: rgba(201,168,117,0.12); }
+    .tile::after { transform: scaleX(1); opacity: 0.8; }
+    .nav-link::after { display: none; }
+  }
+  .btn:active { transform: scale(0.97); }
+  .tile:active, .card:active, .aud-cell:active, .pillar:active { transform: translateY(-2px); }
 </style>
 </head>
 
@@ -589,7 +601,7 @@
   <section class="relative min-h-screen flex flex-col justify-center pt-28 pb-16 overflow-hidden">
     <!-- oversized watermark icon -->
     <img id="hero-bg-icon" src="brand%20assets/paradox_icon_t.png" alt=""
-         class="pointer-events-none select-none hidden lg:block"
+         class="pointer-events-none select-none"
          style="position:absolute; right:-60px; top:50%; transform:translateY(-50%) rotate(0deg); height:min(78vh,720px); width:auto; opacity:0.08; filter: blur(0.3px); will-change:transform;" />
     <div class="wrap">
       <div class="rise" style="animation-delay: 0.05s;">
@@ -630,7 +642,7 @@
             <div class="display text-[26px]" style="font-weight:700;"><span class="stat-num" data-to="100">100</span><span class="text-[15px] align-top accent-text ml-1">%</span></div>
             <div class="kicker mt-2">Conversion-First</div>
           </div>
-          <div class="hidden sm:block">
+          <div>
             <div class="display text-[26px]" style="font-weight:700;"><span class="stat-num" data-inf="999">∞</span></div>
             <div class="kicker mt-2">Unlimited Edits</div>
           </div>
